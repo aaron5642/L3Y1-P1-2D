@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     [Header("UI")]
     public TMP_Text timerTxt;
     public float timer;
+    [Header("health")]
+     public int maxHealth;
+     public int currentHealth;
+
 
     [Header("Main")]
     public float moveSpeed;
@@ -25,6 +29,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentHealth = maxHealth;
         startPos = transform.position;
     }
 
@@ -35,6 +40,7 @@ public class PlayerController : MonoBehaviour
         timerTxt.text = timer.ToString("F2");
         
         Movement();
+        Health();
     }
 
     void Movement()
@@ -53,7 +59,13 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    void Health()
+{
+    if (currentHealth <= 0)
+    {
+        SceneManager. LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+}
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if (other.gameObject.CompareTag("Hazard"))
@@ -63,6 +75,11 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Exit"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            currentHealth--;
+            Destroy(other.gameObject);
         }
     }
 }
